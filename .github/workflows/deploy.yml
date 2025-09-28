@@ -22,12 +22,12 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build project # If your project needs a build step
-        run: echo "No build step required for this project"
+      - name: Build project
+        run: npm run build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./ # The directory to publish (e.g., your build output directory)
+          publish_dir: docs # The directory to publish (e.g., your build output directory)
           # cname: example.com # Uncomment if you have a custom domain
