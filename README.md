@@ -1,5 +1,5 @@
 # Productivity Intelligence System
-[![Deploy to GitHub Pages](https://github.com/frostyfucker/001/actions/workflows/deploy.yml/badge.svg)](https://github.com/frostyfucker/001/actions/workflows/deploy.yml)
+[![Deploy to GitHub Pages](https://github.com/frostyfucker/001/actions/workflows/deploy.yml/badge.svg)](https://github.com/frostyfucker/001/actions/workflows/deploy.yml)<br>
 This project is a **Productivity Intelligence System** designed to learn from user work patterns and provide intelligent suggestions through a minimalist Graphical User Interface (GUI).
 
 ## Core Components:
