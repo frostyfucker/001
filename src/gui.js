@@ -1,6 +1,8 @@
-const TrackingService = require('./services/tracking_service');
-const PatternRecognitionService = require('./services/pattern_recognition_service');
-const SuggestionService = require('./services/suggestion_service');
+import TrackingService from './services/tracking_service.js';
+import PatternRecognitionService from './services/pattern_recognition_service.js';
+import SuggestionService from './services/suggestion_service.js';
+
+const suggestionsContainer = document.getElementById('suggestions-container');
 
 const trackingService = new TrackingService();
 const patternRecognitionService = new PatternRecognitionService(trackingService);
@@ -63,4 +65,4 @@ function removeSuggestion(suggestionsContainer, suggestionId) { // Added suggest
     }
 }
 
-module.exports = { displaySuggestion, removeSuggestion }; // Export the functions
+export { displaySuggestion, removeSuggestion }; // Export the functions

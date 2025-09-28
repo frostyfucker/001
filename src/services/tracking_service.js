@@ -1,4 +1,4 @@
-const StorageService = require('./storage_service');
+import StorageService from './storage_service.js';
 
 /**
  * Service for tracking user actions.
@@ -27,4 +27,4 @@ class TrackingService {
     }
 }
 
-module.exports = TrackingService;
+export default TrackingService;

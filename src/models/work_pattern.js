@@ -19,4 +19,4 @@ class WorkPattern {
     }
 }
 
-module.exports = WorkPattern;
+export default WorkPattern;

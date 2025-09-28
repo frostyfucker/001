@@ -1,4 +1,4 @@
-const WorkPattern = require('../models/work_pattern');
+import WorkPattern from '../models/work_pattern.js';
 
 /**
  * Service for recognizing work patterns from tracked actions.
@@ -60,4 +60,4 @@ class PatternRecognitionService {
     }
 }
 
-module.exports = PatternRecognitionService;
+export default PatternRecognitionService;

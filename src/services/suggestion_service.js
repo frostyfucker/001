@@ -1,5 +1,5 @@
-const Suggestion = require('../models/suggestion');
-const StorageService = require('./storage_service');
+import Suggestion from '../models/suggestion.js';
+import StorageService from './storage_service.js';
 
 /**
  * Service for generating and managing suggestions.
@@ -43,4 +43,4 @@ class SuggestionService {
     }
 }
 
-module.exports = SuggestionService;
+export default SuggestionService;
