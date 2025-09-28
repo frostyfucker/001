@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main # Set a branch to deploy from
+      - 001-productivity-intelligence-system # Set a branch to deploy from
 
 jobs:
   deploy:
