@@ -22,5 +22,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Clean build
+        run: rm -rf .parcel-cache docs
+
       - name: Build project
         run: npm run build
