@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Workflow - Your Personal Productivity Hub</title>
+    
+    <!-- PWA manifest -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkRhaWx5IFdvcmtmbG93IiwKICAic2hvcnRfbmFtZSI6ICJEYWlseVdvcmsiLAogICJkZXNjcmlwdGlvbiI6ICJZb3VyIHBlcnNvbmFsIHByb2R1Y3Rpdml0eSBodWIgZm9yIGRhaWx5IHdvcmsgbWFuYWdlbWVudCIsCiAgInN0YXJ0X3VybCI6ICIuLyIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzFhMWEyZSIsCiAgInRoZW1lX2NvbG9yIjogIiM2MzY2ZjEiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUI0Yld4dWN6MGlhSFIwY0RvdkwzZDNkeTUzTXk1dmNtY3ZNakF3TUM5emRtY2lJSGRwWkhSb1BTSXlOREFpSUdobGFXZG9kRDBpTWpRd0lqNDhjMk55YVhCMFBqNHZQSE4yWnowaSt3a0tQSE4yWnlCNGJXeHVjejBpYUhSMGNEb3ZMMmgwWVhCc0xtOXlaeTl4T1RrNUwzaG9kRzFzSWlCM2FXUjBhRDBpTWpRd0lpQm9aV2xuYUhROUlqSTBNQ0krSUVSaGFXeDVJRmR2Y210bWJHOTNQR05wY21Oc1pTQmplRDBpTVRJd0lpQmplVDBpTVRJd0lpQnlQU0k0TUNJdlBpWm5kRHM4TDBObGNtTnNaVDRnUUNCa1lXbHNlU0IzYjNKclpteHZkeUF3THpNaVBqeDBaWGgwSUdrOVYxSmdUVTFpVEdGMGFXNHVRVTFUVUdWMWVBND0iLAogICAgICAic2l6ZXMiOiAiMjQweDI0MCIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9CiAgXQp9">
+    
+    <!-- iOS meta tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Daily Workflow">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .date-display {
+            font-size: 1.2em;
+            color: #94a3b8;
+            margin-bottom: 20px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: #e2e8f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .tab-btn:hover {
+            background: rgba(99, 102, 241, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 12px 35px rgba(99, 102, 241, 0.6); }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card h3 {
+            color: #06b6d4;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: #e2e8f0;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .task-list {
+            list-style: none;
+        }
+
+        .task-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 12px;
+            border-left: 4px solid #6366f1;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .task-item.completed {
+            opacity: 0.7;
+            border-left-color: #10b981;
+        }
+
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            margin: 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #06b6d4;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #94a3b8;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .search-results {
+            max-height: 400px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .search-result {
+            padding: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .search-result:hover {
+            background: rgba(99, 102, 241, 0.2);
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .template-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .template-card:hover {
+            border-color: #6366f1;
+            transform: translateY(-5px);
+        }
+
+        .offline-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 8px 16px;
+            background: #ef4444;
+            color: white;
+            border-radius: 20px;
+            font-size: 12px;
+            display: none;
+        }
+
+        .time-tracker {
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .timer-display {
+            font-size: 3em;
+            font-weight: 700;
+            color: #10b981;
+            margin: 20px 0;
+        }
+
+        .ai-suggestions {
+            background: rgba(139, 92, 246, 0.1);
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .suggestion-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 3px solid #8b5cf6;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .nav-tabs {
+                justify-content: center;
+            }
+            
+            .quick-actions {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-indicator">
+        📡 Working Offline
+    </div>
+
+    <div class="container">
+        <header class="header">
+            <h1>Daily Workflow</h1>
+            <div class="date-display" id="currentDate"></div>
+            <div class="quick-actions">
+                <button class="btn btn-secondary" onclick="exportData()">📤 Export</button>
+                <button class="btn btn-secondary" onclick="importData()">📥 Import</button>
+                <button class="btn btn-secondary" onclick="generateReport()">📊 Report</button>
+            </div>
+        </header>
+
+        <nav class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('daily')">📝 Daily Log</button>
+            <button class="tab-btn" onclick="switchTab('tasks')">✅ Tasks</button>
+            <button class="tab-btn" onclick="switchTab('analytics')">📊 Analytics</button>
+            <button class="tab-btn" onclick="switchTab('search')">🔍 Search</button>
+            <button class="tab-btn" onclick="switchTab('templates')">📋 Templates</button>
+            <button class="tab-btn" onclick="switchTab('timer')">⏱️ Timer</button>
+        </nav>
+
+        <!-- Daily Log Tab -->
+        <div id="daily" class="tab-content active">
+            <div class="card">
+                <h3>📝 Today's Focus Areas</h3>
+                <div class="form-group">
+                    <label>Top 3 Priorities</label>
+                    <input type="text" placeholder="Priority 1" class="priority-input" data-index="0">
+                    <input type="text" placeholder="Priority 2" class="priority-input" data-index="1">
+                    <input type="text" placeholder="Priority 3" class="priority-input" data-index="2">
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📓 Notes & Observations</h3>
+                <textarea id="dailyNotes" placeholder="What's happening today? Key insights, decisions, blockers..."></textarea>
+            </div>
+
+            <div class="card">
+                <h3>🔗 Links & References</h3>
+                <textarea id="dailyLinks" placeholder="Important links, documents, code repos..."></textarea>
+            </div>
+
+            <div class="card">
+                <h3>🌅 End of Day Review</h3>
+                <div class="form-group">
+                    <label>What did you complete?</label>
+                    <textarea id="completed" placeholder="List your achievements..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>What blocked you?</label>
+                    <textarea id="blockers" placeholder="Challenges, obstacles, dependencies..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Tomorrow's priority</label>
+                    <input type="text" id="tomorrowPriority" placeholder="Most important thing for tomorrow">
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="saveDailyLog()">💾 Save Daily Log</button>
+        </div>
+
+        <!-- Tasks Tab -->
+        <div id="tasks" class="tab-content">
+            <div class="card">
+                <h3>✅ Task Management</h3>
+                <div class="form-group">
+                    <input type="text" id="newTask" placeholder="Add a new task..." onkeypress="handleTaskKeyPress(event)">
+                    <button class="btn btn-primary" onclick="addTask()">➕ Add Task</button>
+                </div>
+                <ul id="taskList" class="task-list"></ul>
+            </div>
+
+            <div class="card">
+                <h3>📈 Task Insights</h3>
+                <div id="taskStats"></div>
+            </div>
+        </div>
+
+        <!-- Analytics Tab -->
+        <div id="analytics" class="tab-content">
+            <div class="card">
+                <h3>📊 Productivity Analytics</h3>
+                <div class="stats-grid" id="analyticsGrid"></div>
+            </div>
+
+            <div class="ai-suggestions">
+                <h3>🤖 AI Insights</h3>
+                <div id="aiInsights">
+                    <div class="suggestion-item">
+                        💡 You're most productive on Tuesdays - consider scheduling important tasks then
+                    </div>
+                    <div class="suggestion-item">
+                        📝 Your average note length is increasing - you're capturing more detail over time
+                    </div>
+                    <div class="suggestion-item">
+                        ⚡ You complete 20% more tasks when you define clear priorities the night before
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Tab -->
+        <div id="search" class="tab-content">
+            <div class="card">
+                <h3>🔍 Search Your History</h3>
+                <input type="text" id="searchInput" placeholder="Search across all your notes, tasks, and logs..." onkeypress="handleSearchKeyPress(event)">
+                <button class="btn btn-primary" onclick="performSearch()">🔍 Search</button>
+                <div id="searchResults" class="search-results"></div>
+            </div>
+        </div>
+
+        <!-- Templates Tab -->
+        <div id="templates" class="tab-content">
+            <div class="card">
+                <h3>📋 Daily Templates</h3>
+                <div class="template-grid">
+                    <div class="template-card" onclick="applyTemplate('standard')">
+                        <h4>📝 Standard Daily</h4>
+                        <p>Regular workday template with focus areas, notes, and review</p>
+                    </div>
+                    <div class="template-card" onclick="applyTemplate('meeting')">
+                        <h4>🤝 Meeting Day</h4>
+                        <p>Template optimized for days heavy on meetings and collaboration</p>
+                    </div>
+                    <div class="template-card" onclick="applyTemplate('project')">
+                        <h4>🚀 Project Focus</h4>
+                        <p>Deep work template for project-focused development days</p>
+                    </div>
+                    <div class="template-card" onclick="applyTemplate('planning')">
+                        <h4>🎯 Planning & Strategy</h4>
+                        <p>Template for strategic planning and goal-setting sessions</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Timer Tab -->
+        <div id="timer" class="tab-content">
+            <div class="card">
+                <div class="time-tracker">
+                    <h3>⏱️ Focus Timer</h3>
+                    <div class="timer-display" id="timerDisplay">00:00:00</div>
+                    <input type="text" id="currentTask" placeholder="What are you working on?">
+                    <div class="quick-actions">
+                        <button class="btn btn-primary" onclick="startTimer()">▶️ Start</button>
+                        <button class="btn btn-secondary" onclick="pauseTimer()">⏸️ Pause</button>
+                        <button class="btn btn-secondary" onclick="stopTimer()">⏹️ Stop</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📊 Time Tracking History</h3>
+                <div id="timeHistory"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =============================================================================
+        // GLOBAL VARIABLES
+        // =============================================================================
+        let currentTimer = null;
+        let startTime = null;
+        let elapsedTime = 0;
+        let isPaused = false;
+
+        // =============================================================================
+        // PWA & OFFLINE FUNCTIONALITY
+        // =============================================================================
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('data:application/javascript;base64,' + btoa(`
+                const CACHE_NAME = 'daily-workflow-v1';
+                self.addEventListener('install', event => {
+                    self.skipWaiting();
+                });
+                self.addEventListener('fetch', event => {
+                    event.respondWith(fetch(event.request).catch(() => new Response('Offline')));
+                });
+            `)).catch(e => console.log('SW failed:', e));
+        }
+
+        function updateOnlineStatus() {
+            document.body.className = navigator.onLine ? 'online' : 'offline';
+        }
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+
+        // =============================================================================
+        // DATA MANAGEMENT
+        // =============================================================================
+        class WorkflowData {
+            constructor() {
+                this.data = this.loadData();
+                this.autoSave();
+            }
+
+            loadData() {
+                try {
+                    const saved = localStorage.getItem('dailyWorkflow');
+                    return saved ? JSON.parse(saved) : {
+                        dailyLogs: {},
+                        tasks: [],
+                        timeEntries: [],
+                        analytics: {},
+                        settings: {}
+                    };
+                } catch (e) {
+                    console.error('Failed to load data:', e);
+                    return { dailyLogs: {}, tasks: [], timeEntries: [], analytics: {}, settings: {} };
+                }
+            }
+
+            save() {
+                try {
+                    localStorage.setItem('dailyWorkflow', JSON.stringify(this.data));
+                } catch (e) {
+                    console.error('Failed to save data:', e);
+                }
+            }
+
+            autoSave() {
+                setInterval(() => this.save(), 30000);
+            }
+
+            getDateKey(date = new Date()) {
+                return date.toISOString().split('T')[0];
+            }
+
+            getDailyLog(date = new Date()) {
+                const key = this.getDateKey(date);
+                return this.data.dailyLogs[key] || {
+                    priorities: ['', '', ''],
+                    notes: '',
+                    links: '',
+                    completed: '',
+                    blockers: '',
+                    tomorrowPriority: ''
+                };
+            }
+
+            saveDailyLog(data, date = new Date()) {
+                const key = this.getDateKey(date);
+                this.data.dailyLogs[key] = { ...data, timestamp: new Date().toISOString() };
+                this.save();
+            }
+        }
+
+        const workflow = new WorkflowData();
+
+        // =============================================================================
+        // UI MANAGEMENT
+        // =============================================================================
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(tabName).classList.add('active');
+            document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
+
+            loadTabData(tabName);
+        }
+
+        function loadTabData(tabName) {
+            switch(tabName) {
+                case 'daily': loadDailyLog(); break;
+                case 'tasks': loadTasks(); break;
+                case 'analytics': loadAnalytics(); break;
+                case 'timer': loadTimeHistory(); break;
+                case 'search': break;
+                case 'templates': break;
+            }
+        }
+
+        // =============================================================================
+        // DAILY LOG FUNCTIONALITY
+        // =============================================================================
+        function loadDailyLog() {
+            const log = workflow.getDailyLog();
+            
+            document.querySelectorAll('.priority-input').forEach((input, index) => {
+                input.value = log.priorities[index] || '';
+            });
+
+            document.getElementById('dailyNotes').value = log.notes || '';
+            document.getElementById('dailyLinks').value = log.links || '';
+            document.getElementById('completed').value = log.completed || '';
+            document.getElementById('blockers').value = log.blockers || '';
+            document.getElementById('tomorrowPriority').value = log.tomorrowPriority || '';
+        }
+
+        function saveDailyLog() {
+            const priorities = Array.from(document.querySelectorAll('.priority-input')).map(input => input.value);
+            
+            const logData = {
+                priorities,
+                notes: document.getElementById('dailyNotes').value,
+                links: document.getElementById('dailyLinks').value,
+                completed: document.getElementById('completed').value,
+                blockers: document.getElementById('blockers').value,
+                tomorrowPriority: document.getElementById('tomorrowPriority').value
+            };
+
+            workflow.saveDailyLog(logData);
+            showNotification('✅ Daily log saved successfully!');
+        }
+
+        // =============================================================================
+        // TASK MANAGEMENT
+        // =============================================================================
+        function addTask() {
+            const taskText = document.getElementById('newTask').value.trim();
+            if (!taskText) return;
+
+            const task = {
+                id: Date.now(),
+                text: taskText,
+                completed: false,
+                createdAt: new Date().toISOString()
+            };
+
+            workflow.data.tasks.push(task);
+            workflow.save();
+            
+            document.getElementById('newTask').value = '';
+            loadTasks();
+        }
+
+        function toggleTask(taskId) {
+            const task = workflow.data.tasks.find(t => t.id === taskId);
+            if (task) {
+                task.completed = !task.completed;
+                task.completedAt = task.completed ? new Date().toISOString() : null;
+                workflow.save();
+                loadTasks();
+            }
+        }
+
+        function deleteTask(taskId) {
+            workflow.data.tasks = workflow.data.tasks.filter(t => t.id !== taskId);
+            workflow.save();
+            loadTasks();
+        }
+
+        function loadTasks() {
+            const taskList = document.getElementById('taskList');
+            const tasks = workflow.data.tasks.slice(-20); // Show last 20 tasks
+
+            taskList.innerHTML = tasks.map(task => `
+                <li class="task-item ${task.completed ? 'completed' : ''}">
+                    <input type="checkbox" class="task-checkbox" 
+                           ${task.completed ? 'checked' : ''} 
+                           onchange="toggleTask(${task.id})">
+                    <span style="flex: 1">${task.text}</span>
+                    <button onclick="deleteTask(${task.id})" style="background: #ef4444; border: none; border-radius: 50%; width: 30px; height: 30px; color: white; cursor: pointer;">×</button>
+                </li>
+            `).join('');
+
+            updateTaskStats();
+        }
+
+        function updateTaskStats() {
+            const tasks = workflow.data.tasks;
+            const today = new Date().toDateString();
+            const todayTasks = tasks.filter(t => new Date(t.createdAt).toDateString() === today);
+            const completed = todayTasks.filter(t => t.completed).length;
+            const total = todayTasks.length;
+
+            document.getElementById('taskStats').innerHTML = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">${completed}</div>
+                        <div class="stat-label">Completed Today</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${total - completed}</div>
+                        <div class="stat-label">Remaining</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${total > 0 ? Math.round((completed/total) * 100) : 0}%</div>
+                        <div class="stat-label">Progress</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${tasks.length}</div>
+                        <div class="stat-label">Total Tasks</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function handleTaskKeyPress(event) {
+            if (event.key === 'Enter') {
+                addTask();
+            }
+        }
+
+        // =============================================================================
+        // ANALYTICS
+        // =============================================================================
+        function loadAnalytics() {
+            const logs = Object.keys(workflow.data.dailyLogs);
+            const tasks = workflow.data.tasks;
+            
+            const totalLogs = logs.length;
+            const totalTasks = tasks.length;
+            const completedTasks = tasks.filter(t => t.completed).length;
+            const currentStreak = getCurrentStreak();
+
+            document.getElementById('analyticsGrid').innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-number">${totalLogs}</div>
+                    <div class="stat-label">Days Logged</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${completedTasks}</div>
+                    <div class="stat-label">Tasks Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${currentStreak}</div>
+                    <div class="stat-label">Current Streak</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${totalTasks > 0 ? Math.round((completedTasks/totalTasks) * 100) : 0}%</div>
+                    <div class="stat-label">Completion Rate</div>
+                </div>
+            `;
+        }
+
+        function getCurrentStreak() {
+            let streak = 0;
+            let checkDate = new Date();
+            
+            for (let i = 0; i < 30; i++) {
+                const dateKey = workflow.getDateKey(checkDate);
+                if (workflow.data.dailyLogs[dateKey]) {
+                    streak++;
+                    checkDate.setDate(checkDate.getDate() - 1);
+                } else {
+                    break;
+                }
+            }
+            return streak;
+        }
+
+        // =============================================================================
+        // SEARCH FUNCTIONALITY
+        // =============================================================================
+        function performSearch() {
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            if (!query) return;
+
+            const results = [];
+            
+            // Search daily logs
+            Object.entries(workflow.data.dailyLogs).forEach(([date, log]) => {
+                const searchableText = (
+                    log.priorities.join(' ') + ' ' +
+                    log.notes + ' ' +
+                    log.links + ' ' +
+                    log.completed + ' ' +
+                    log.blockers + ' ' +
+                    log.tomorrowPriority
+                ).toLowerCase();
+
+                if (searchableText.includes(query)) {
+                    results.push({
+                        type: 'Daily Log',
+                        date: new Date(date).toLocaleDateString(),
+                        content: getSearchSnippet(searchableText, query),
+                        data: log
+                    });
+                }
+            });
+
+            // Search tasks
+            workflow.data.tasks.forEach(task => {
+                if (task.text.toLowerCase().includes(query)) {
+                    results.push({
+                        type: 'Task',
+                        date: new Date(task.createdAt).toLocaleDateString(),
+                        content: task.text,
+                        data: task
+                    });
+                }
+            });
+
+            displaySearchResults(results, query);
+        }
+
+        function getSearchSnippet(text, query) {
+            const index = text.indexOf(query);
+            const start = Math.max(0, index - 50);
+            const end = Math.min(text.length, index + query.length + 50);
+            let snippet = text.substring(start, end);
+            
+            if (start > 0) snippet = '...' + snippet;
+            if (end < text.length) snippet = snippet + '...';
+            
+            return snippet.replace(new RegExp(query, 'gi'), `<strong>        function loadAnalytics() {
+            const logs = Object.keys(workflow.data.dailyLogs);
+            const tasks = workflow.data.tasks;
+            
+            const</strong>`);
+        }
+
+        function displaySearchResults(results, query) {
+            const container = document.getElementById('searchResults');
+            
+            if (results.length === 0) {
+                container.innerHTML = `<p>No results found for "${query}"</p>`;
+                return;
+            }
+
+            container.innerHTML = `
+                <h4>Found ${results.length} result(s) for "${query}":</h4>
+                ${results.map(result => `
+                    <div class="search-result">
+                        <strong>${result.type}</strong> - ${result.date}
+                        <p>${result.content}</p>
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        function handleSearchKeyPress(event) {
+            if (event.key === 'Enter') {
+                performSearch();
+            }
+        }
+
+        // =============================================================================
+        // TEMPLATE SYSTEM
+        // =============================================================================
+        function applyTemplate(templateName) {
+            // Show loading state
+            const templateCards = document.querySelectorAll('.template-card');
+            templateCards.forEach(card => card.style.opacity = '0.5');
+
+            const templates = {
+                standard: {
+                    name: 'Standard Daily',
+                    priorities: ['Review yesterday\'s work and outcomes', 'Focus on main project milestone', 'Plan tomorrow\'s key priorities'],
+                    notes: 'Daily Standup Notes:\n- What I accomplished yesterday:\n- What I\'m working on today:\n- Any blockers or challenges:\n\nKey Decisions Made:\n- \n\nLearnings & Insights:\n- \n\nImportant Updates:\n- ',
+                    links: 'Important Links:\n- Project Repository: \n- Documentation: \n- Related Tickets: ',
+                    completed: '',
+                    blockers: '',
+                    tomorrowPriority: ''
+                },
+                meeting: {
+                    name: 'Meeting Day',
+                    priorities: ['Prepare for scheduled meetings', 'Review meeting agendas and materials', 'Follow up on previous action items'],
+                    notes: 'Meeting Schedule:\n🕐 9:00 AM - \n🕐 11:00 AM - \n🕐 2:00 PM - \n\nKey Discussion Points:\n- \n- \n\nDecisions Made:\n- \n- \n\nAction Items Assigned:\n- [ ] \n- [ ] ',
+                    links: 'Meeting Resources:\n- Agenda: \n- Shared Documents: \n- Video Call Link: ',
+                    completed: '',
+                    blockers: '',
+                    tomorrowPriority: 'Follow up on today\'s meeting outcomes'
+                },
+                project: {
+                    name: 'Project Focus',
+                    priorities: ['Complete code review for pending PRs', 'Implement core feature functionality', 'Write and run comprehensive tests'],
+                    notes: 'Technical Work:\n## Code Changes\n- Files modified:\n- Key functions added/updated:\n\n## Architecture Decisions\n- Database changes:\n- API modifications:\n\n## Testing Notes\n- Unit tests added:\n- Integration tests:\n- Manual testing results:',
+                    links: 'Development Resources:\n- Repository: \n- Issue Tracker: \n- Documentation: \n- Code Review: ',
+                    completed: '',
+                    blockers: '',
+                    tomorrowPriority: 'Continue development on main feature'
+                },
+                planning: {
+                    name: 'Planning & Strategy',
+                    priorities: ['Review and update strategic objectives', 'Set measurable goals and KPIs', 'Plan resource allocation and timeline'],
+                    notes: 'Strategic Planning Session:\n## Objectives Review\n- Current quarter goals:\n- Progress assessment:\n\n## KPIs to Track\n- Performance metrics:\n- Success indicators:\n\n## Resource Planning\n- Team capacity:\n- Budget considerations:\n- Timeline milestones:\n\n## Risk Assessment\n- Potential challenges:\n- Mitigation strategies:',
+                    links: 'Planning Resources:\n- Strategic Documents: \n- Project Roadmap: \n- Budget Spreadsheet: ',
+                    completed: '',
+                    blockers: '',
+                    tomorrowPriority: 'Begin execution of planned initiatives'
+                }
+            };
+
+            const template = templates[templateName];
+            if (template) {
+                // Show confirmation dialog with preview
+                const preview = `
+                    <div style="max-width: 500px;">
+                        <h3>Apply ${template.name} Template?</h3>
+                        <p><strong>This will replace your current daily log content with:</strong></p>
+                        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin: 10px 0; max-height: 200px; overflow-y: auto;">
+                            <strong>Priorities:</strong><br>
+                            ${template.priorities.map((p, i) => `${i+1}. ${p}`).join('<br>')}<br><br>
+                            <strong>Notes Template:</strong><br>
+                            ${template.notes.substring(0, 100)}...
+                        </div>
+                        <p style="color: #fbbf24;">⚠️ Any existing content will be overwritten.</p>
+                    </div>
+                `;
+
+                // Create custom confirmation dialog
+                const modal = document.createElement('div');
+                modal.style.cssText = `
+                    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+                    background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center;
+                    z-index: 10000; backdrop-filter: blur(5px);
+                `;
+                
+                modal.innerHTML = `
+                    <div style="background: linear-gradient(135deg, #1a1a2e, #16213e); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); color: #e2e8f0; text-align: center;">
+                        ${preview}
+                        <div style="margin-top: 20px;">
+                            <button onclick="confirmTemplate('${templateName}')" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border: none; padding: 12px 24px; border-radius: 8px; margin: 0 10px; cursor: pointer; font-weight: 600;">✅ Apply Template</button>
+                            <button onclick="cancelTemplate()" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 12px 24px; border-radius: 8px; margin: 0 10px; cursor: pointer;">❌ Cancel</button>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                
+                // Store template data for confirmation
+                window.pendingTemplate = template;
+            }
+
+            // Restore template card opacity
+            setTimeout(() => {
+                templateCards.forEach(card => card.style.opacity = '1');
+            }, 100);
+        }
+
+        function confirmTemplate(templateName) {
+            const template = window.pendingTemplate;
+            if (template) {
+                // Apply template to form fields
+                document.querySelectorAll('.priority-input').forEach((input, index) => {
+                    input.value = template.priorities[index] || '';
+                });
+                
+                document.getElementById('dailyNotes').value = template.notes;
+                document.getElementById('dailyLinks').value = template.links;
+                document.getElementById('completed').value = template.completed;
+                document.getElementById('blockers').value = template.blockers;
+                document.getElementById('tomorrowPriority').value = template.tomorrowPriority;
+
+                // Switch to daily tab with smooth transition
+                switchTab('daily');
+                
+                // Auto-save the template
+                setTimeout(() => {
+                    saveDailyLog();
+                }, 500);
+
+                // Show success message
+                showNotification(`📋 ${template.name} template applied! Check the Daily Log tab.`);
+                
+                // Highlight the daily log tab briefly
+                const dailyTab = document.querySelector('[onclick="switchTab(\'daily\')"]');
+                dailyTab.style.animation = 'pulse 2s ease-in-out';
+                setTimeout(() => dailyTab.style.animation = '', 2000);
+            }
+            
+            // Remove modal
+            document.querySelector('[style*="position: fixed"]').remove();
+            delete window.pendingTemplate;
+        }
+
+        function cancelTemplate() {
+            document.querySelector('[style*="position: fixed"]').remove();
+            delete window.pendingTemplate;
+        }
+
+        // =============================================================================
+        // TIMER FUNCTIONALITY
+        // =============================================================================
+        function startTimer() {
+            const taskName = document.getElementById('currentTask').value.trim();
+            if (!taskName) {
+                showNotification('⚠️ Please enter a task name first');
+                return;
+            }
+
+            if (!isPaused) {
+                startTime = Date.now();
+                elapsedTime = 0;
+            } else {
+                startTime = Date.now() - elapsedTime;
+                isPaused = false;
+            }
+
+            currentTimer = setInterval(updateTimerDisplay, 1000);
+            
+            // Update button states
+            document.querySelector('[onclick="startTimer()"]').style.opacity = '0.5';
+            document.querySelector('[onclick="pauseTimer()"]').style.opacity = '1';
+            document.querySelector('[onclick="stopTimer()"]').style.opacity = '1';
+        }
+
+        function pauseTimer() {
+            if (currentTimer) {
+                clearInterval(currentTimer);
+                currentTimer = null;
+                isPaused = true;
+                elapsedTime = Date.now() - startTime;
+                
+                // Update button states
+                document.querySelector('[onclick="startTimer()"]').style.opacity = '1';
+                document.querySelector('[onclick="pauseTimer()"]').style.opacity = '0.5';
+            }
+        }
+
+        function stopTimer() {
+            if (currentTimer) {
+                clearInterval(currentTimer);
+                currentTimer = null;
+                
+                const taskName = document.getElementById('currentTask').value.trim();
+                const totalTime = isPaused ? elapsedTime : Date.now() - startTime;
+                
+                // Save time entry
+                workflow.data.timeEntries.push({
+                    task: taskName,
+                    duration: totalTime,
+                    date: new Date().toISOString()
+                });
+                workflow.save();
+                
+                // Reset timer
+                elapsedTime = 0;
+                isPaused = false;
+                document.getElementById('timerDisplay').textContent = '00:00:00';
+                document.getElementById('currentTask').value = '';
+                
+                // Update button states
+                document.querySelector('[onclick="startTimer()"]').style.opacity = '1';
+                document.querySelector('[onclick="pauseTimer()"]').style.opacity = '0.5';
+                document.querySelector('[onclick="stopTimer()"]').style.opacity = '0.5';
+                
+                loadTimeHistory();
+                showNotification(`⏱️ Timer stopped! Worked on "${taskName}" for ${formatTime(totalTime)}`);
+            }
+        }
+
+        function updateTimerDisplay() {
+            if (startTime) {
+                const elapsed = Date.now() - startTime;
+                document.getElementById('timerDisplay').textContent = formatTime(elapsed);
+            }
+        }
+
+        function formatTime(milliseconds) {
+            const seconds = Math.floor(milliseconds / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            
+            return `${hours.toString().padStart(2, '0')}:${(minutes % 60).toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`;
+        }
+
+        function loadTimeHistory() {
+            const today = new Date().toDateString();
+            const todayEntries = workflow.data.timeEntries.filter(entry => 
+                new Date(entry.date).toDateString() === today
+            );
+
+            const container = document.getElementById('timeHistory');
+            
+            if (todayEntries.length === 0) {
+                container.innerHTML = '<p>No time entries for today yet.</p>';
+                return;
+            }
+
+            const totalTime = todayEntries.reduce((sum, entry) => sum + entry.duration, 0);
+            
+            container.innerHTML = `
+                <div class="stat-card" style="margin-bottom: 20px;">
+                    <div class="stat-number">${formatTime(totalTime)}</div>
+                    <div class="stat-label">Total Time Today</div>
+                </div>
+                <div>
+                    ${todayEntries.map(entry => `
+                        <div style="background: rgba(255,255,255,0.05); padding: 10px; margin: 5px 0; border-radius: 8px;">
+                            <strong>${entry.task}</strong><br>
+                            Duration: ${formatTime(entry.duration)}<br>
+                            Time: ${new Date(entry.date).toLocaleTimeString()}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // =============================================================================
+        // UTILITY FUNCTIONS
+        // =============================================================================
+        function showNotification(message) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: linear-gradient(135deg, #10b981, #059669);
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                font-weight: 600;
+                z-index: 1000;
+                box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+                animation: slideIn 0.3s ease-out;
+            `;
+            notification.textContent = message;
+            
+            // Add slide-in animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(-50%) translateY(-100%); opacity: 0; }
+                    to { transform: translateX(-50%) translateY(0); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideIn 0.3s ease-out reverse';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        function exportData() {
+            try {
+                // Ensure we have valid data
+                if (!workflow.data) {
+                    showNotification('❌ No data to export');
+                    return;
+                }
+
+                // Create export data with metadata
+                const exportData = {
+                    exportDate: new Date().toISOString(),
+                    version: "1.0",
+                    data: workflow.data
+                };
+
+                const dataStr = JSON.stringify(exportData, null, 2);
+                const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                
+                // Create download link
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `daily-workflow-backup-${new Date().toISOString().split('T')[0]}.json`;
+                
+                // Trigger download
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Clean up
+                setTimeout(() => URL.revokeObjectURL(url), 100);
+                
+                showNotification('📤 Data exported successfully!');
+                console.log('Export completed:', exportData);
+                
+            } catch (error) {
+                console.error('Export failed:', error);
+                showNotification('❌ Export failed: ' + error.message);
+            }
+        }
+
+        function importData() {
+            try {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json';
+                input.style.display = 'none';
+                
+                input.onchange = function(event) {
+                    const file = event.target.files[0];
+                    if (!file) return;
+
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const fileContent = e.target.result;
+                            let importedData = JSON.parse(fileContent);
+                            
+                            // Handle both old and new export formats
+                            if (importedData.data) {
+                                importedData = importedData.data;
+                            }
+                            
+                            // Validate imported data structure
+                            if (!importedData.dailyLogs) importedData.dailyLogs = {};
+                            if (!importedData.tasks) importedData.tasks = [];
+                            if (!importedData.timeEntries) importedData.timeEntries = [];
+                            if (!importedData.analytics) importedData.analytics = {};
+                            if (!importedData.settings) importedData.settings = {};
+                            
+                            if (confirm('This will replace all current data. Are you sure?')) {
+                                workflow.data = importedData;
+                                workflow.save();
+                                
+                                // Refresh current view
+                                loadDailyLog();
+                                if (document.getElementById('tasks').classList.contains('active')) {
+                                    loadTasks();
+                                }
+                                if (document.getElementById('analytics').classList.contains('active')) {
+                                    loadAnalytics();
+                                }
+                                
+                                showNotification('📥 Data imported successfully!');
+                                console.log('Import completed:', importedData);
+                            }
+                        } catch (error) {
+                            console.error('Import failed:', error);
+                            showNotification('❌ Invalid file format: ' + error.message);
+                        }
+                    };
+                    
+                    reader.onerror = function() {
+                        showNotification('❌ Failed to read file');
+                    };
+                    
+                    reader.readAsText(file);
+                };
+                
+                document.body.appendChild(input);
+                input.click();
+                document.body.removeChild(input);
+                
+            } catch (error) {
+                console.error('Import setup failed:', error);
+                showNotification('❌ Import failed: ' + error.message);
+            }
+        }
+
+        function generateReport() {
+            try {
+                // Ensure we have data
+                if (!workflow.data) {
+                    showNotification('❌ No data available for report');
+                    return;
+                }
+
+                const logs = Object.entries(workflow.data.dailyLogs || {});
+                const tasks = workflow.data.tasks || [];
+                const timeEntries = workflow.data.timeEntries || [];
+                
+                const completedTasks = tasks.filter(t => t.completed);
+                const totalTimeToday = timeEntries
+                    .filter(entry => {
+                        const entryDate = new Date(entry.date).toDateString();
+                        const today = new Date().toDateString();
+                        return entryDate === today;
+                    })
+                    .reduce((sum, entry) => sum + (entry.duration || 0), 0);
+
+                // Generate comprehensive report
+                const report = `# Daily Workflow Report
+Generated: ${new Date().toLocaleString()}
+
+## Overview Statistics
+- **Total days logged:** ${logs.length}
+- **Total tasks created:** ${tasks.length}
+- **Total tasks completed:** ${completedTasks.length}
+- **Completion rate:** ${tasks.length > 0 ? Math.round((completedTasks.length / tasks.length) * 100) : 0}%
+- **Total time entries:** ${timeEntries.length}
+- **Time tracked today:** ${formatTime(totalTimeToday)}
+- **Current streak:** ${getCurrentStreak()} days
+
+## Recent Daily Logs (Last 7 Days)
+${logs.length > 0 ? logs.slice(-7).map(([date, log]) => `
+### ${new Date(date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+
+**Priorities:**
+${log.priorities && log.priorities.filter(p => p.trim()).length > 0 
+    ? log.priorities.filter(p => p.trim()).map(p => `- ${p}`).join('\n')
+    : '- None listed'
+}
+
+**Notes:** ${log.notes ? log.notes.substring(0, 200) + (log.notes.length > 200 ? '...' : '') : 'None'}
+
+**Completed:** ${log.completed || 'None listed'}
+
+**Blockers:** ${log.blockers || 'None listed'}
+
+**Tomorrow's Priority:** ${log.tomorrowPriority || 'None listed'}
+
+---
+`).join('\n') : 'No daily logs found'}
+
+## Task Analysis
+### Completed Tasks (Last 10)
+${completedTasks.length > 0 ? completedTasks.slice(-10).map(task => `
+- ✅ ${task.text} (completed: ${new Date(task.completedAt || task.createdAt).toLocaleDateString()})
+`).join('') : 'No completed tasks found'}
+
+### Pending Tasks
+${tasks.filter(t => !t.completed).slice(0, 10).map(task => `
+- ⏳ ${task.text} (created: ${new Date(task.createdAt).toLocaleDateString()})
+`).join('') || 'No pending tasks'}
+
+## Time Tracking Summary (Last 7 Days)
+${timeEntries.length > 0 ? timeEntries
+    .filter(entry => {
+        const entryDate = new Date(entry.date);
+        const weekAgo = new Date();
+        weekAgo.setDate(weekAgo.getDate() - 7);
+        return entryDate >= weekAgo;
+    })
+    .slice(-10)
+    .map(entry => `
+- **${entry.task}:** ${formatTime(entry.duration || 0)} (${new Date(entry.date).toLocaleDateString()})
+`).join('') : 'No time entries found'}
+
+## Productivity Insights
+- **Most productive day pattern:** ${getMostProductiveDay()}
+- **Average tasks per day:** ${logs.length > 0 ? Math.round(tasks.length / logs.length * 10) / 10 : 0}
+- **Data collection period:** ${logs.length > 0 ? `${Math.ceil((Date.now() - new Date(logs[0][0])) / (1000 * 60 * 60 * 24))} days` : '0 days'}
+
+---
+*Generated by Daily Workflow PWA v1.0*
+*Export Date: ${new Date().toISOString()}*`;
+                
+                // Create and download the report
+                const blob = new Blob([report], {type: 'text/markdown; charset=utf-8'});
+                const url = URL.createObjectURL(blob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `daily-workflow-report-${new Date().toISOString().split('T')[0]}.md`;
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                setTimeout(() => URL.revokeObjectURL(url), 100);
+                
+                showNotification('📊 Report generated successfully!');
+                console.log('Report generated with', logs.length, 'logs,', tasks.length, 'tasks');
+                
+            } catch (error) {
+                console.error('Report generation failed:', error);
+                showNotification('❌ Report generation failed: ' + error.message);
+            }
+        }
+
+        function getMostProductiveDay() {
+            const logs = Object.entries(workflow.data.dailyLogs || {});
+            if (logs.length === 0) return 'No data available';
+            
+            const dayCount = {};
+            logs.forEach(([date]) => {
+                const dayName = new Date(date).toLocaleDateString('en-US', { weekday: 'long' });
+                dayCount[dayName] = (dayCount[dayName] || 0) + 1;
+            });
+            
+            const mostProductiveDay = Object.keys(dayCount).reduce((a, b) => dayCount[a] > dayCount[b] ? a : b);
+            return mostProductiveDay || 'Unknown';
+        }
+
+        // =============================================================================
+        // INITIALIZATION
+        // =============================================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCurrentDate();
+            updateOnlineStatus();
+            loadDailyLog();
+            
+            // Auto-save form data as user types
+            document.addEventListener('input', function(e) {
+                if (e.target.matches('.priority-input, #dailyNotes, #dailyLinks, #completed, #blockers, #tomorrowPriority')) {
+                    // Debounced auto-save
+                    clearTimeout(window.autoSaveTimeout);
+                    window.autoSaveTimeout = setTimeout(() => {
+                        const priorities = Array.from(document.querySelectorAll('.priority-input')).map(input => input.value);
+                        const logData = {
+                            priorities,
+                            notes: document.getElementById('dailyNotes').value,
+                            links: document.getElementById('dailyLinks').value,
+                            completed: document.getElementById('completed').value,
+                            blockers: document.getElementById('blockers').value,
+                            tomorrowPriority: document.getElementById('tomorrowPriority').value
+                        };
+                        workflow.saveDailyLog(logData);
+                    }, 2000);
+                }
+            });
+            
+            // Update date every minute
+            setInterval(updateCurrentDate, 60000);
+        });
+    </script>
+</body>
+</html>
