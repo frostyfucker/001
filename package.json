@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "parcel index.html",
-    "build": "parcel build index.html --dist-dir docs && touch docs/.nojekyll",
+    "build": "parcel build index.html --dist-dir docs",
     "test": "jest"
   },
   "keywords": [],
